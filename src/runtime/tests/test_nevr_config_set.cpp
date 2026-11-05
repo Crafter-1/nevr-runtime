@@ -397,7 +397,7 @@ TEST(NevrConfigSetWord, SetThenReadRoundTrip) {
   ASSERT_TRUE(cfg.Set("graphics.texture_quality", std::string("ultra")).ok);
   EXPECT_EQ(cfg.GetString("graphics.texture_quality").value_or(""), "ultra");
   const nevr::NevrConfig again = nevr::NevrConfig::LoadFromFile(dir.File());
-    EXPECT_EQ(again.GetString("graphics.texture_quality").value_or(""), "ultra");
+  EXPECT_EQ(again.GetString("graphics.texture_quality").value_or(""), "ultra");
 }
 
 // #1857: SetPluginEnabled, the plugin manager's writer. The same promise as Set (every other byte kept), addressed by list
