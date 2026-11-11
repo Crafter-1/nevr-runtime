@@ -1,7 +1,7 @@
 # Fifth-card override set (dev-only experiment)
 
 Evidence for the design in issue 1857, plan step 2: a fifth main-menu card (PLUGINS) added as data, with no runtime
-code change. These 12 files are the recipe. They are not shipped, not read by any build, and not a design for the
+code change. These 13 files are the recipe. They are not shipped, not read by any build, and not a design for the
 final card.
 
 ## What the files are
@@ -16,6 +16,9 @@ Together they clone a card actor into one of the scene's 57 actor-less entity sl
 - the scene resource (type `0x29edbd196a3c7457`) with the new actor's hash in the entity table, which is sorted by
   signed 64-bit hash with the slot staying with the hash. The same replaced hash also sits in a 114-entry array and
   a 55-entry table of the scene resource, and all three are changed.
+- the level resource (type `0xe8e38d7781a338a6`, 5488 bytes, same size as stock) with the same replaced hash in its
+  own 55-entry table of (hash, index) pairs (entry 24 at byte offset 1912, equal to the scene's 55-entry table).
+  Only those 8 bytes differ from stock.
 
 ## SHA-256
 
@@ -32,17 +35,17 @@ f2592dee6a258d468efe2a4648e3c6381af757222512d06c09da02dcc85b4a8b  0x75e5993f8094
 677da8b23afc342da37f104ca7ade1f90cc680f4b8df8f1fef61bbd8851ddf27  0xa61c15604ed2e050.0xac360e41e4ede056
 6ba12fc772d92a3e44db4985e5abe3ffd04bb937480871395b5fb213930ee0f7  0xa691ec467180d00c.0xac360e41e4ede056
 b1a2783e0a8ddff2313cd52962f902afe1e6ac9b1ec57f1dfcd8ff94d4a7c74b  0xb374f7689b3f8f24.0xac360e41e4ede056
+794e749890a7bafa69e90873727e1dd79772c238264d236627b1d733a9e1dfc4  0xe8e38d7781a338a6.0xac360e41e4ede056
 ```
 
 ## How it was used
 
 Copied into `_overrides/` of a throwaway copy of the game install, with a dev build (`mingw-plugin-dev`) of the
-runtime and a production sign-in. Result: `overrides_registered=12 overrides_failed=0`, the card shows with its text,
-CREATE GAME, JOIN VIA CODE and PLAY still work. Pressing the card starts the tutorial, because the clone keeps the
-TUTORIALS card's press action.
+runtime and a production sign-in. Result: `overrides_registered=13 overrides_failed=0`, the card shows with its text,
+CREATE GAME, JOIN VIA CODE and PLAY still work, and a lobby and game run without a crash record. Pressing the card
+starts the tutorial, because the clone keeps the TUTORIALS card's press action.
 
 ## Known open
 
-- The level resource (`CGameLevelResource`) still holds the replaced hash once, at byte offset 1912.
-- No lobby baseline run without the card, on the same build, has been compared yet.
-- Whether 256 entries is a limit, and which of the 11 edits the card needs, are untested.
+- Whether the loader needs the level resource's table and the scene's tables to agree is not tested.
+- Whether 256 entries is a limit, and which of the edits the card needs, are untested.
